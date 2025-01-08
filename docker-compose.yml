@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   python:
     build:
@@ -17,4 +16,5 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
     volumes:
       - .:/code
+      - ./cache:/root/.cache/whisper:rw
     command: python3 app/main.py
