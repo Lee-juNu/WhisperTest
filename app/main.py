@@ -1,23 +1,31 @@
+from fastapi import FastAPI, Path
 import whisper
 import torch
+import time
+import os
+from threading import Lock
 
-# GPU 使用可能かどうか
-if torch.cuda.is_available():
-    device = "cuda"
-    print("GPU is available. Using CUDA.")
-else:
-    device = "cpu"
-    print("GPU is not available. Using CPU.")
+app = FastAPI()
 
-# Whisper モデルロード(tiny, base, small, medium, large, turbo)
-model = whisper.load_model("tiny", device=device)
+model_name= os.getenv("ASR_MODEL", "base")
 
-# mp3 ファイルのパス
-file = "app/audio/kr.mp3"
+@app.get("/")
+def read_root():
+    print("model:",model_name)
+    if torch.cuda.is_available():
+        model = whisper.load_model(model_name).cuda()
+        print("Using GPU:", torch.cuda.get_device_name(0))
+    else:
+        model = whisper.load_model(model_name)
+        print("Using CPU")
+    model_lock = Lock()
 
-# 文字お越し実行
-try:
+    start = time.time()
+
+    file = "app/audio/kr.mp3" #mp3 파일 경로를 이용한다.
     result = model.transcribe(file)
-    print("Transcription result:", result["text"])
-except Exception as e:
-    print("Error during transcription:", str(e))
+
+    end = time.time()
+    print("The time of execution of above program is :", (end-start))
+
+    return {"content": result["text"],"processing_seconds": (end-start)}
