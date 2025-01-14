@@ -19,6 +19,8 @@ services:
       # - ASR_MODEL=small
       # - ASR_MODEL=medium
       # - ASR_MODEL=large
+    ports:
+      - '80:80'    
     volumes:
+      - .:/code
       - ./cache:/root/.cache/whisper:rw
-      - ./app:/code/app
