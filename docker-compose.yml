@@ -14,11 +14,11 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-      - ASR_MODEL=tiny
+      # - ASR_MODEL=tiny
       # - ASR_MODEL=base
       # - ASR_MODEL=small
       # - ASR_MODEL=medium
-      # - ASR_MODEL=large
+      - ASR_MODEL=large
     ports:
       - '80:80'    
     volumes:
