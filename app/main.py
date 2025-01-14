@@ -1,7 +1,7 @@
 import whisper
 import torch
 
-# GPU 사용 가능 여부 확인
+# GPU 使用可能かどうか
 if torch.cuda.is_available():
     device = "cuda"
     print("GPU is available. Using CUDA.")
@@ -9,13 +9,13 @@ else:
     device = "cpu"
     print("GPU is not available. Using CPU.")
 
-# Whisper 모델 로드
+# Whisper モデルロード(tiny, base, small, medium, large, turbo)
 model = whisper.load_model("tiny", device=device)
 
-# 처리할 파일 경로
-file = "app/audio/test.m4a"
+# mp3 ファイルのパス
+file = "app/audio/kr.mp3"
 
-# 파일 변환 및 텍스트 추출
+# 文字お越し実行
 try:
     result = model.transcribe(file)
     print("Transcription result:", result["text"])
