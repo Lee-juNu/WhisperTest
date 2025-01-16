@@ -1,34 +1,16 @@
-from fastapi import FastAPI, Path
-import whisper
-import torch
-import time
-import os
-from threading import Lock
+from fastapi import FastAPI, HTTPException
+from app.health import router as health_router
+from app.transcriber import transcribe_audio
 
 app = FastAPI()
 
-model_name= os.getenv("ASR_MODEL", "base")
+app.include_router(health_router)
 
-@app.get("/")
+@app.get("/", tags=["Transcription"])
 def read_root():
-    print("model:",model_name)
-    if torch.cuda.is_available():
-        model = whisper.load_model(model_name).cuda()
-        print("Using GPU:", torch.cuda.get_device_name(0))
-    else:
-        model = whisper.load_model(model_name)
-        print("Using CPU")
-    model_lock = Lock()
-
-    start = time.time()
-
-    file = "app/audio/kr.mp3"
-    result = model.transcribe(file)
-    
-    if torch.cuda.is_available():
-        torch.cuda.synchronize()
-
-    end = time.time()
-    print("The time of execution of above program is :", (end-start))
-
-    return {"content": result["text"],"processing_seconds": (end-start)}
+    file_path = "app/audio/kr.mp3"
+    try:
+        result = transcribe_audio(file_path)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return result

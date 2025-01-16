@@ -2,8 +2,7 @@ FROM python:3.9.7
 
 WORKDIR /code
 
-RUN apt update
-RUN apt install ffmpeg -y
+RUN apt update && apt install ffmpeg -y
 RUN pip install --upgrade pip
 
 RUN pip install openai-whisper==20230314
