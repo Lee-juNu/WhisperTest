@@ -22,8 +22,11 @@ def read_root():
 
     start = time.time()
 
-    file = "app/audio/kr.mp3" #mp3 파일 경로를 이용한다.
+    file = "app/audio/kr.mp3"
     result = model.transcribe(file)
+    
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
 
     end = time.time()
     print("The time of execution of above program is :", (end-start))
