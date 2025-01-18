@@ -12,6 +12,7 @@ RUN pip install numpy==1.26.4
 RUN pip install fastapi[all]==0.95.1
 RUN pip install uvicorn[standard]==0.21.1
 RUN pip install gunicorn==20.1.0
+RUN pip install python-multipart
 
 COPY ./app /code/app
 
